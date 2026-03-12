@@ -39,11 +39,11 @@ int main() {
     cudaMalloc (&d_results, N * sizeof(float));
 
     int threadsPerBlock = 256;
-    int numBlocks = (n + threadsPerBlock - 1) / threadsPerBlock;
+    int numBlocks = (N + threadsPerBlock - 1) / threadsPerBlock;
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    mcKernel <<numBlocks, threadsPerBlock>> (d_results, S0, K, r, sigma, T, N, 1234ULL);
+    monteCarloKernel <<<numBlocks, threadsPerBlock>>> (d_results, S0, K, r, sigma, T, N, 1234ULL);
     cudaMemcpy(h_results, d_results, N * sizeof(float), cudaMemcpyDeviceToHost);
 
     double sum = 0.0;
